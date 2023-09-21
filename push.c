@@ -1,37 +1,36 @@
 #include "monty.h"
 /**
- * f_push - add node to the stack
- * @head: stack head
- * @counter: line_number
- * Return: no return
-*/
-void f_push(stack_t **head, unsigned int counter)
+ *push - Filo function, put the element onto the stack
+ *@stack: stack
+ *@last_line: command line
+ */
+void push(stack_t **stack, __attribute__((unused))unsigned int last_line)
 {
-	int n, j = 0, flag = 0;
+	stack_t *new, *tmp;
 
-	if (bus.arg)
+	if (global.line[1] == NULL || check_num(global.line[1]) == -1)
 	{
-		if (bus.arg[0] == '-')
-			j++;
-		for (; bus.arg[j] != '\0'; j++)
-		{
-			if (bus.arg[j] > 57 || bus.arg[j] < 48)
-				flag = 1; }
-		if (flag == 1)
-		{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-			fclose(bus.file);
-			free(bus.content);
-			free_stack(*head);
-			exit(EXIT_FAILURE); }}
-	else
-	{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE); }
-	n = atoi(bus.arg);
-	if (bus.lifi == 0)
-		addnode(head, n);
-	else
-		addqueue(head, n);
+		fprintf(stderr, "L%i: usage: push integer\n", last_line);
+		release(NULL, NULL, 'r');
+		free_dlistint(*stack);
+		free(global.line);
+		exit(EXIT_FAILURE);
+	}
+	tmp = *stack;
+	new = malloc(sizeof(stack_t));
+	if (new == '\0')
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		release(NULL, NULL, 'r');
+		free_dlistint(*stack);
+		free(global.line);
+		exit(EXIT_FAILURE);
+	}
+	new->next = '\0';
+	new->n = atoi(global.line[1]);
+	new->prev = '\0';
+	*stack = new;
+	new->next = tmp;
+	if (tmp != '\0')
+		tmp->prev = new;
 }

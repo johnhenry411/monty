@@ -1,12 +1,11 @@
 #include "monty.h"
 /**
-  *f_nop- nothing
-  *@head: stack head
-  *@counter: line_number
-  *Return: no return
- */
-void f_nop(stack_t **head, unsigned int counter)
+ * nop- The opcode nop doesn’t do anything.
+ * @stack: stack represent in a doubly-linked list
+ * @line_number: line of the flie
+ * Return: nothing
+*/
+void nop(stack_t **stack, __attribute__((unused))unsigned int line_number)
 {
-	(void) counter;
-	(void) head;
+	(void)stack;
 }

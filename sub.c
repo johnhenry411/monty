@@ -1,29 +1,27 @@
 #include "monty.h"
 /**
-  *f_sub- sustration
-  *@head: stack head
-  *@counter: line_number
-  *Return: no return
- */
-void f_sub(stack_t **head, unsigned int counter)
+ * sub - The opcode sub subtracts the top element of the stack
+ * from the second top element of the stack.
+ * @stack: stack represent in a doubly-linked list
+ * @line_number: line of the flie
+ * Return: nothing
+*/
+void sub(stack_t **stack, unsigned int line_number)
 {
-	stack_t *aux;
-	int sus, nodes;
+	stack_t *first_ele, *second_ele;
 
-	aux = *head;
-	for (nodes = 0; aux != NULL; nodes++)
-		aux = aux->next;
-	if (nodes < 2)
+	if (*stack == NULL || (*stack)->next == NULL)
 	{
-		fprintf(stderr, "L%d: can't sub, stack too short\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
+		fprintf(stderr, "L%u: can't sub, stack too short\n", line_number);
+		release(NULL, NULL, 'r');
+		free_dlistint(*stack);
+		free(global.line);
 		exit(EXIT_FAILURE);
 	}
-	aux = *head;
-	sus = aux->next->n - aux->n;
-	aux->next->n = sus;
-	*head = aux->next;
-	free(aux);
+	first_ele = *stack;
+	second_ele = (*stack)->next;
+	second_ele->n -= first_ele->n;
+	*stack = second_ele;
+	second_ele->prev = NULL;
+	free(first_ele);
 }

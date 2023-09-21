@@ -1,45 +1,44 @@
 #include "monty.h"
-bus_t bus = {NULL, NULL, NULL, 0};
 /**
-* main - monty code interpreter
-* @argc: number of arguments
-* @argv: monty file location
-* Return: 0 on success
+ *main - entry point
+ *@argc: number of arguments
+ *@argv: arguments
+ *Return: success
 */
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-	char *content;
-	FILE *file;
+	FILE *in_stream = NULL;
+	char *monty_codes = NULL;
 	size_t size = 0;
-	ssize_t read_line = 1;
-	stack_t *stack = NULL;
-	unsigned int counter = 0;
+	unsigned int n_line = 0;
+	stack_t *pila = NULL;
 
 	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	file = fopen(argv[1], "r");
-	bus.file = file;
-	if (!file)
+	in_stream = fopen(argv[1], "r");
+	if (in_stream == NULL)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-	while (read_line > 0)
+	while (getline(&monty_codes, &size, in_stream) != EOF)
 	{
-		content = NULL;
-		read_line = getline(&content, &size, file);
-		bus.content = content;
-		counter++;
-		if (read_line > 0)
-		{
-			execute(content, &stack, counter, file);
-		}
-		free(content);
+		n_line++;
+		release(&in_stream, &monty_codes, 's');
+		if (n_line != '\0')
+			free(global.line);
+		global.line = format_line(monty_codes);
+		if (global.line == NULL || (global.line[0][0] == '\n' ||
+		global.line[0][0] == '#'))
+			continue;
+		else
+			get_op_function(&pila, n_line);
 	}
-	free_stack(stack);
-	fclose(file);
-return (0);
+	release(NULL, NULL, 'r');
+	free(global.line);
+	free_dlistint(pila);
+	return (EXIT_SUCCESS);
 }

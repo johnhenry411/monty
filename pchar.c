@@ -1,31 +1,27 @@
 #include "monty.h"
 /**
- * f_pchar - prints the char at the top of the stack,
- * followed by a new line
- * @head: stack head
- * @counter: line_number
- * Return: no return
-*/
-void f_pchar(stack_t **head, unsigned int counter)
+ *pchar - print the top element of the stack as ascii
+ *@stack: strack elements
+ *@line_number: number of instruction
+ */
+void pchar(stack_t **stack, unsigned int line_number)
 {
-	stack_t *h;
+	if (stack == '\0' || stack[0] == '\0')
+	{
+		fprintf(stderr, "L%i: can't pchar, stack empty\n", line_number);
+		release(NULL, NULL, 'r');
+		free_dlistint(*stack);
+		free(global.line);
+		exit(EXIT_FAILURE);
+	}
+	if (stack[0]->n < 32 || stack[0]->n > 126)
+	{
+		fprintf(stderr, "L%i: can't pchar, value out of range\n", line_number);
+		release(NULL, NULL, 'r');
+		free_dlistint(*stack);
+		free(global.line);
+		exit(EXIT_FAILURE);
+	}
 
-	h = *head;
-	if (!h)
-	{
-		fprintf(stderr, "L%d: can't pchar, stack empty\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
-	}
-	if (h->n > 127 || h->n < 0)
-	{
-		fprintf(stderr, "L%d: can't pchar, value out of range\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
-	}
-	printf("%c\n", h->n);
+	printf("%c\n", stack[0]->n);
 }

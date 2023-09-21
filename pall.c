@@ -1,21 +1,20 @@
 #include "monty.h"
 /**
- * f_pall - prints the stack
- * @head: stack head
- * @counter: no used
- * Return: no return
-*/
-void f_pall(stack_t **head, unsigned int counter)
+ *pall - print the elements into the stack in Lifo way
+ *@stack: stack of elements
+ *@last_line: command line
+ *
+ */
+void pall(stack_t **stack,  __attribute__((unused))unsigned int last_line)
 {
-	stack_t *h;
-	(void)counter;
+	stack_t *stack_print;
 
-	h = *head;
-	if (h == NULL)
+	stack_print = *stack;
+	if (stack_print == '\0')
 		return;
-	while (h)
+	while (stack_print != '\0')
 	{
-		printf("%d\n", h->n);
-		h = h->next;
+		printf("%i\n", stack_print->n);
+		stack_print = stack_print->next;
 	}
 }
